@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>陽だまり商店街物語</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-card: #1a1a2e;
+      --text-primary: #e0ddd5;
+      --text-secondary: #8a8a9a;
+      --accent: #4a9eff;
+      --accent-dim: #2a5a9a;
+      --gold: #c4a35a;
+      --chapter-border: #2a2a3e;
+      --serif: 'Noto Serif JP', 'Hiragino Mincho ProN', serif;
+      --sans: 'Zen Kaku Gothic New', 'Hiragino Kaku Gothic ProN', sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--serif);
+      font-size: 17px;
+      line-height: 1.95;
+      min-height: 100vh;
+    }
+
+    /* ─── Header ─── */
+    .hero {
+      position: relative;
+      text-align: center;
+      padding: 100px 20px 80px;
+      background: linear-gradient(180deg, #1a2a4a 0%, #0f1a2f 100%);
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 30%, rgba(120,180,255,0.15) 0%, transparent 70%);
+    }
+    .hero-title {
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 5vw, 3.2rem);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #ffffff;
+      text-shadow: 0 2px 20px rgba(100,160,255,0.3);
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .hero-sub {
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      color: #b0c4de;
+      letter-spacing: 0.15em;
+    }
+    .hero-line {
+      width: 60px; height: 1px;
+      background: var(--gold);
+      margin: 28px auto 0;
+    }
+
+    /* ─── Digest Carousel ─── */
+    .carousel-wrap {
+      background: linear-gradient(180deg, #0f1a2f 0%, #0a0e18 100%);
+      padding: 24px 0 20px;
+      overflow: hidden;
+    }
+    .carousel-track {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      padding: 0 calc((100vw - min(85vw, 600px)) / 2);
+      scrollbar-width: none;
+    }
+    .carousel-track::-webkit-scrollbar { display: none; }
+    .carousel-slide {
+      flex: 0 0 min(85vw, 280px);
+      scroll-snap-align: center;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      transition: transform 0.2s;
+      aspect-ratio: 3/2;
+    }
+    .carousel-slide:active { transform: scale(0.97); }
+    .carousel-slide img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .carousel-caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.85));
+      padding: 28px 12px 10px;
+      color: #fff;
+      font-size: 0.85rem;
+      font-family: var(--serif);
+      line-height: 1.4;
+    }
+    .carousel-ch {
+      display: inline-block;
+      font-size: 0.7rem;
+      color: var(--gold);
+      margin-right: 6px;
+      font-family: var(--sans);
+      letter-spacing: 0.06em;
+    }
+    .carousel-dots {
+      text-align: center;
+      padding-top: 12px;
+    }
+    .carousel-dot {
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      margin: 0 4px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+    }
+    .carousel-dot.active {
+      background: var(--gold);
+      transform: scale(1.3);
+    }
+    @media (min-width: 600px) {
+      .carousel-slide { flex: 0 0 280px; }
+      .carousel-track { padding: 0 calc((100vw - 900px) / 2); gap: 18px; }
+    }
+
+    /* ─── Navigation ─── */
+    .nav-bar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,10,15,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--chapter-border);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      overflow-x: auto;
+      font-family: var(--sans);
+      font-size: 0.8rem;
+    }
+    .nav-bar .nav-title {
+      color: var(--gold);
+      font-weight: 700;
+      white-space: nowrap;
+      margin-right: 8px;
+    }
+    .nav-bar a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      white-space: nowrap;
+      padding: 4px 10px;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    .nav-bar a:hover {
+      color: var(--accent);
+      background: rgba(74,158,255,0.1);
+    }
+
+    /* ─── TOC ─── */
+    .toc {
+      max-width: 700px;
+      margin: 60px auto 40px;
+      padding: 0 20px;
+    }
+    .toc h3 {
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .toc-item {
+      display: flex; align-items: center; gap: 16px;
+      padding: 14px 18px;
+      color: var(--text-primary);
+      text-decoration: none;
+      border-left: 2px solid var(--chapter-border);
+      transition: all 0.25s;
+      font-family: var(--sans);
+      font-size: 0.95rem;
+    }
+    .toc-item:hover {
+      border-color: var(--accent);
+      background: rgba(74,158,255,0.04);
+      padding-left: 24px;
+    }
+    .toc-num {
+      font-size: 0.75rem;
+      color: var(--accent-dim);
+      font-weight: 700;
+      min-width: 20px;
+    }
+
+    /* ─── Synopsis ─── */
+    .synopsis {
+      max-width: 700px;
+      margin: 50px auto 20px;
+      padding: 0 20px;
+    }
+    .synopsis h3 {
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+    }
+    .synopsis p {
+      font-size: 0.92rem;
+      color: var(--text-primary);
+      line-height: 1.8;
+      border-left: 3px solid var(--gold);
+      padding-left: 16px;
+      font-style: italic;
+    }
+
+    /* ─── Characters ─── */
+    .characters {
+      max-width: 700px;
+      margin: 40px auto 60px;
+      padding: 0 20px;
+    }
+    .characters h3 {
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+    .char-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+    }
+    .char-card {
+      background: var(--bg-card);
+      border: 1px solid var(--chapter-border);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .char-name {
+      font-family: var(--sans);
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .char-meta {
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      color: var(--accent);
+      margin-bottom: 8px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .char-meta span {
+      background: rgba(74,158,255,0.1);
+      padding: 1px 8px;
+      border-radius: 4px;
+    }
+    .char-appearance {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 6px;
+      border-left: 2px solid var(--chapter-border);
+      padding-left: 10px;
+    }
+    .char-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ─── Divider ─── */
+    .section-divider {
+      width: 40px; height: 1px;
+      background: var(--chapter-border);
+      margin: 0 auto;
+    }
+
+    /* ─── Chapter ─── */
+    .chapter {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 80px 20px;
+      border-top: 1px solid var(--chapter-border);
+    }
+    .chapter-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .chapter-number {
+      font-family: var(--sans);
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      color: var(--accent-dim);
+      display: block;
+      margin-bottom: 8px;
+    }
+    .chapter-title {
+      font-family: var(--serif);
+      font-size: clamp(1.3rem, 3vw, 1.8rem);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    .chapter-image {
+      margin: 0 -20px 40px;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--chapter-border);
+    }
+    .chapter-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+      opacity: 0.92;
+    }
+    .chapter-body p {
+      margin-bottom: 1.2em;
+      text-indent: 1em;
+      text-align: justify;
+    }
+    .chapter-body p:empty {
+      display: none;
+    }
+
+    /* ─── Footer ─── */
+    .footer {
+      text-align: center;
+      padding: 60px 20px;
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      border-top: 1px solid var(--chapter-border);
+    }
+
+    /* ─── Reading mode toggle ─── */
+    .mode-toggle {
+      position: fixed; bottom: 20px; right: 20px; z-index: 200;
+      background: var(--bg-card);
+      border: 1px solid var(--chapter-border);
+      color: var(--text-secondary);
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      padding: 8px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mode-toggle:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+
+
+    /* ─── Light mode ─── */
+    body.light {
+      --bg-primary: #f5f0e8;
+      --bg-secondary: #ebe5d9;
+      --bg-card: #fff;
+      --text-primary: #2a2a2a;
+      --text-secondary: #6a6a6a;
+      --chapter-border: #d5cfc3;
+      --accent: #2563eb;
+      --accent-dim: #6b9eff;
+      --gold: #8a6d2b;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 600px) {
+      body { font-size: 15px; }
+      .chapter { padding: 50px 16px; }
+    }
+
+    /* ─── Scroll progress ─── */
+    .scroll-progress {
+      position: fixed; top: 0; left: 0; z-index: 200;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      width: 0%;
+      transition: width 0.1s;
+    }
+  </style>
+</head>
+<body>
+  <div class="scroll-progress" id="progress"></div>
+
+  <header class="hero">
+    <h1 class="hero-title">陽だまり商店街物語</h1>
+    <p class="hero-sub">GENERATED WITH AI — Claude + DeepSeek + STABLE DIFFUSION</p>
+    <div class="hero-line"></div>
+  </header>
+
+  <div class="carousel-wrap">
+    <div class="carousel-track" id="carouselTrack">
+        <a class="carousel-slide" href="#chapter-1"><img src="images/chapter_01.png" alt="第1章" loading="lazy"/><div class="carousel-caption"><span class="carousel-ch">第1章</span>春の新生活</div></a>
+        <a class="carousel-slide" href="#chapter-2"><img src="images/chapter_02.png" alt="第2章" loading="lazy"/><div class="carousel-caption"><span class="carousel-ch">第2章</span>夏祭りの準備</div></a>
+    </div>
+    <div class="carousel-dots"><span class="carousel-dot active" data-idx="0"></span> <span class="carousel-dot" data-idx="1"></span></div>
+  </div>
+  <nav class="nav-bar" id="navBar">
+    <span class="nav-title">目次</span>
+    <a href="#chapter-1" onclick="smoothJump(event,'chapter-1')">第1章</a><a href="#chapter-2" onclick="smoothJump(event,'chapter-2')">第2章</a>
+  </nav>
+
+  <div class="toc" id="toc">
+    <h3>— 目次 —</h3>
+        <a href="#chapter-1" class="toc-item" onclick="smoothJump(event,'chapter-1')"><span class="toc-num">1</span><span class="toc-label">春の新生活</span></a>
+        <a href="#chapter-2" class="toc-item" onclick="smoothJump(event,'chapter-2')"><span class="toc-num">2</span><span class="toc-label">夏祭りの準備</span></a>
+  </div>
+
+  <div class="synopsis">
+    <h3>— あらすじ —</h3>
+    <p>現代。古い商店街の一角にある小さな雑貨店「陽だまり」を中心とした物語。
+昔ながらの温かい人情が残る商店街には、個性豊かな店主たちが暮らしている。
+季節の移ろいと共に、小さな日常の幸せが積み重なっていく穏やかな世界。
+近所の人々が集まる…</p>
+  </div>
+  <div class="characters">
+    <h3>— 登場人物 —</h3>
+    <div class="char-grid">
+      <div class="char-card">
+        <div class="char-name">桜井みお</div>
+        <div class="char-meta"><span>主人公</span><span>22歳</span></div>
+        <div class="char-appearance">肩にかかる柔らかな茶髪と優しい瞳が印象的な女性。
+いつも笑顔を絶やさず、花柄のエプロンがよく似合う。
+小柄で親しみやすい雰囲気を持っている。</div>
+        <div class="char-desc">明るく面倒見が良い、誰とでも気さくに話せる温かい性格</div>
+      </div>
+      <div class="char-card">
+        <div class="char-name">田中おじいちゃん</div>
+        <div class="char-meta"><span>サブキャラ</span><span>68歳</span></div>
+        <div class="char-appearance">白髪で小太りの優しそうな老人。
+いつも帽子をかぶり、商店街の情報通として親しまれている。
+笑顔のしわが深く刻まれた温和な顔立ち。</div>
+        <div class="char-desc">物知りで話好き、若い人の相談相手になることを喜ぶ</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <main>
+
+    <section class="chapter" id="chapter-1">
+      <div class="chapter-header">
+        <span class="chapter-number">第1章</span>
+        <h2 class="chapter-title">春の新生活</h2>
+      </div>
+      
+        <div class="chapter-image">
+          <img src="images/chapter_01.png" alt="第1章 挿絵"
+               loading="lazy" />
+        </div>
+      <div class="chapter-body">
+        <p># 第1章　春の新生活</p>
+
+        <p>桜の花びらが風に舞う音が、商店街のアーケードに柔らかく響いていた。甘いような、どこか儚い匂い。午前九時の陽ざしが、古びた煉瓦の歩道を温め始める。まだ肌寒さが残る空気の中、春は確かに息づいていた。</p>
+
+        <p>「陽だまり」のシャッターを上げる音が、通りにこだました。</p>
+
+        <p>みおは両手で重い鉄の戸を持ち上げ、鍵をしまった。店内から漂う古い木と紙の匂い。祖母が残していったこの店は、何もかもが大きすぎた。棚は背よりも高く、レジは使い慣れない機械で、在庫リストの文字は細かすぎて目が疲れる。</p>
+
+        <p>エプロンの紐を結び直す。花柄の布地が指先にざらりとした感触を残す。</p>
+
+        <p>「おはようございます」</p>
+
+        <p>声がした。振り返ると、向かいの豆腐屋のおばさんが手を振っていた。白いエプロンにほんのり豆の香り。</p>
+
+        <p>「おはようございます」</p>
+
+        <p>みおも笑顔で返した。声が少しだけ震えていないか気になった。</p>
+
+        <p>店内に入る。木製の床板がきしむ。朝日が窓ガラスを通して斜めに入り込み、ほこりの粒子を金色に照らす。棚には陶器や布製品、手作りの小物たちが整然と並んでいる。すべて祖母が選んだものだ。一つひとつに物語があるはずなのに、みおにはまだわからないことばかりだった。</p>
+
+        <p>レジカウンターに立つ。高さが合わない。祖母は背が低かったから、踏み台を使っていたのだろう。踏み台がない。</p>
+
+        <p>ため息が出そうになるのをこらえた。</p>
+
+        <p>ドアの上の鈴が鳴った。</p>
+
+        <p>「あら、みおちゃん」</p>
+
+        <p>入ってきたのは田中おじいちゃんだった。いつもの帽子を少し斜めにかぶり、手には新聞を持っている。</p>
+
+        <p>「商店街のみんなでね」彼はカウンターに近づきながら言った。「新しい店主さんのために、ちょっとしたものを持ってきたんだよ」</p>
+
+        <p>新聞を広げる。中から小さな踏み台が出てきた。木製で、角は丸く削られていた。</p>
+
+        <p>「これは……」</p>
+
+        <p>「大工の鈴木さんが作ってくれたんだ」田中おじいちゃんは目尻のしわを深くした。「君のおばあちゃんも使ってたけどね、ずいぶん古くなっちゃってね」</p>
+
+        <p>みおは踏み台を受け取った。表面は滑らかに磨かれていて、手触りがあたたかい。</p>
+
+        <p>「ありがとうございます」</p>
+
+        <p>言葉だけで足りない気がしたので、深々と頭を下げた。</p>
+
+        <p>「そんなことしないでも」おじいちゃんは笑った。「さあ、試してみなよ」</p>
+
+        <p>踏み台に乗る。高さがぴったりだった。カウンターの上にある伝票が見やすくなり、レジにも手が届きやすくなった。</p>
+
+        <p>「どうだい？」</p>
+
+        <p>「完璧です」</p>
+
+        <p>本当にそう思った。小さなことなのに、胸のあたりに熱いものがこみ上げてくる。</p>
+
+        <p>田中おじいちゃんは店内を見回した。「懐かしいねえ。この棚の並び方も、あのおばあちゃんそのままだよ」</p>
+
+        <p>「変えたほうがいいですか？」</p>
+
+        <p>「いやいや」彼は首を振った。「この店はね、こういう雰囲気がいいんだよ。急に変えちゃだめだ」</p>
+
+        <p>ドアの鈴が再び鳴る。</p>
+
+        <p>入ってきたのは三十代くらいの女性だった。スーツ姿で鞄を持ち、少し疲れた表情をしている。</p>
+
+        <p>「あの……」女性は声を潜めて言った。「包装紙ってありますか？」</p>
+
+        <p>みおは瞬時に棚の方へ向かった。「はい、こちらです」</p>
+
+        <p>包装紙コーナーには何種類かの柄があった。祖母は贈り物用として揃えていたのだろう。</p>
+
+        <p>女性は淡い水色の和紙に指を伸ばした。「これください」</p>
+
+        <p>レジに戻る途中でみおは足を止めた。「贈り物ですか？」</p>
+
+        <p>「ええ」女性はうつむいた。「今日、母との食事なんですけど……最近会えてなくて」</p>
+
+        <p>言葉にならないものがその声にはあった。</p>
+
+        <p>みおは包装紙を取りながら考えた。「リボンもお付けしますか？ 無料サービスです」</p>
+
+        <p>自分でもなぜそう言ったのかわからなかった。ただそうしたかった。</p>
+
+        <p>女性の顔がほんのり明るくなった。「ありがとうございます」</p>
+
+        <p>包装紙とリボンを渡しながら、みおはもう一言加えた。「素敵な時間になりますように」</p>
+
+        <p>鈴をもう一度鳴らして女性が出ていった後も、その言葉だけが店内に残っているようだった。</p>
+
+        <p>田中おじいちゃんが静かに言った。「いい対応だったよ」</p>
+
+        <p>「でも……」みおは自分の手を見つめた。「何か他にしてあげられたかなって」</p>
+
+        <p>「それで十分だよ」彼はカウンターにもたれかかった。「商店街のお店ってね、商品を売るだけじゃないんだよ」</p>
+
+        <p>午前中のお客さんはまばらだった。</p>
+        <p>通りを行き交う人の足音。</p>
+        <p>自転車のベル。</p>
+        <p>遠くで子どもたちのはしゃぐ声。</p>
+        <p>それらの音すべてが、「陽だまり」という小さな箱庭の中へ優しく流れ込んでくる。</p>
+        <p>窓辺には小さな植木鉢がある。</p>
+        <p>祖母が育てていたパキラだ。</p>
+        <p>新芽が出始めている。</p>
+        <p>薄緑色の小さな葉っぱたち。</p>
+        <p>光を受けて透き通っている。</p>
+        <p>水やりをするときのみおの指先に触れる土。</p>
+        <p>湿っていて冷たい感触。</p>
+        <p>生きている実感がある。</p>
+        <p>昼過ぎになり陽ざしがいっそう強くなる頃、</p>
+        <p>再びドア上の鈴があわただしい音を立てた。</p>
+        <p>駆け込んできたのは小学生くらいの男児だった。</p>
+        <p>息を切らして、</p>
+        <p>顔には涙と泥と汗がいっしょくたになっている。</p>
+        <p>ズボンの膝部分には破れた穴が見える。</p>
+        <p>「どうしたんですか？」</p>
+        <p>みおはいつの間にかカウンターから出ていた。</p>
+        <p>男児を見下ろす位置になるので、</p>
+        <p>しゃがんで目線を合わせるようにする。</p>
+        <p>男児はずっと下唇を噛んでいたけれど、</p>
+        <p>やっと口を開いた：</p>
+        <p>「転んだ」</p>
+        <p>声には震えがあった。</p>
+        <p>泣きたいけれど我慢しているような、</p>
+        <p>そんな張り詰めた響きがあった。</p>
+        <p>田中おじいちゃんも近づいてきた：</p>
+        <p>「痛かっただろうね」</p>
+        <p>男児こくりとうなずいた：</p>
+        <p>「サッカーボール追っかけて……」</p>
+        <p>話しながらまた涙があふれてくるので、</p>
+        <p>慌てて袖で拭う動作をするのだがあまり効果がないようだった。</p>
+        <p>まず洗面所へ連れて行こうと思いついたのは自然な流れだった：</p>
+        <p>「顔洗いに来ましょう」</p>
+        <p>水道から出る水音の中で、</p>
+        <p>男児はずんずんと顔についた汚れや涙痕などを洗っていく動作をするのだがあまり上手ではない様子なので、</p>
+        <p>結局最後まで見守ることしかできなかったけれども終わると随分すっきりとした表情になっていたことは確かである：</p>
+        <p>ズボンの破れについては応急処置が必要だと判断する：</p>
+        <p>針と糸を取り出す動作をする間にも心臓だけはずっと早鐘のように打ち続けている状態であったけれど不思議と手元だけしっかりしている感覚があった：</p>
+        <p>祖母から教わった縫い方である：</p>
+        <p>玉結びを作ることから始める動作である：</p>
+        <p>糸を通すとき針穴に対して真剣に向き合う姿勢である：</p>
+        <p>男児はずっと黙って見つめているだけだったけれど呼吸だけはずっと落ち着いてきているのが伝わってくる状態であった：</p>
+        <p>縫っている最中ふと思いついて聞いてみることにした：</p>
+        <p>「サッカー好きなんですか？」</p>
+        <p>男児目を見開いて答える：</p>
+        <p>「好き！」</p>
+        <p>その瞬間顔全体輝くような表情になるのである：</p>
+        <p>縫いは完了するまで五分ほど要することになったかもしれないけれど最後玉止めをする段階ではもう完全に元気を取り戻している様子であった：</p>
+        <p>終わると立ち上がって足踏みしてみせる動作をするのである：</p>
+        <p>大丈夫だと証明したいかのように：</p>
+        <p>田中おじいちゃん笑顔で言う：「上手になったね」</p>
+        <p>褒められたことでさらに嬉しそうにする男児であったけれど突然何かを思い出したように鞄の中探し始める動作に入るのである：</p>
+        <p>財布を取り出すのである：</p>
+        <p>小銭入れである：</p>
+        <p>中身全部出すのである：</p>
+        <p>十円玉五枚と百円玉一枚である：「いくらですか？」</p>
+        <p>問われて初めて値段について考える羽目になるのである：そもそも請求するつもりなど全くなかったのだ：しかし今断るとせっかく用意してくれた気持ち傷つけるかもしれないとも思う：そこで適当な数字口にする：「百円でいいですよ」</p>
+        <p>男児百円玉差し出す動作をする：受け取ると深々一礼する：「ありがとうございました！」</p>
+        <p>走り去っていく背中を見送っている間にも胸の中温かいものが広がっていく感覚があった：鈴音消えてからもしばらく残響のように耳元離れなかった：</p>
+
+        <p>午後四時頃になると陽ざし次第に傾き始める：アーケード越しに見える空薄橙色染まっていく：通りを行き交う人々足早になる：帰宅時間近づいている証拠である：</p>
+
+        <p>一日最後のお客さん現れたのは閉店三十分前のことだった：先程包装紙買っていった女性である：今度笑顔浮かべている：「母とても喜んでくれました」そう言って小さな箱差し出す：「差し入れです」</p>
+        <p>開けると中には和菓子二個入っていた：桜餅である：春限定商品だろう：</p>
+
+        <p>一緒にお茶淹れて食べようと提案する：田中おじいちゃん頷く：</p>
+
+        <p>三人カウンター内側集まる：湯沸かす音：湯気立つ様子：茶葉広がる香り：</p>
+
+        <p>桜餅一口頬張ると甘さ口の中広がっていく感覚があった：</p>
+
+        <p>女性話し始める：「実母ここ商店街育ちなんです」遠くを見つめる目：「私子どもの頃よく連れて来てもらいました」「この店にも何度来たことか……」</p>
+
+        <p>記憶共有される瞬間空間歪むような感覚あった：</p>
+
+        <p>外暗くなり始める頃女性帰っていった：</p>
+
+        <p>閉店準備しながら一日振り返る：</p>
+
+        <p>売上伝票記入する数字少ないけれど何故か満足感あった：</p>
+
+        <p>シャッター下ろす音重たい：</p>
+
+        <p>鍵閉める金属音澄んだ：</p>
+
+        <p>通りに出ると街灯幾つとも灯り始めている：</p>
+
+        <p>帰路着くと玄関先小さな包み置かれていた：近所の人たちからの引っ越し祝いだろう：一つ一つ開ける作業明日にとっておこうと思う：</p>
+
+        <p>風吹き抜ける夜道歩いている最中突然思い出すことあった：</p>
+
+        <p>祖母よく言っていた言葉：「商店街家族のようなものだよ」</p>
+        <p>当時意味よく理解できなかったけれど今少しだけ分かる気する：</p>
+
+        <p>家着くと電話鳴っている：母からの電話だろう：</p>
+
+        <p>受話器取る前に一呼吸置く動作自然に出てくる：</p>
+
+        <p>窓外見える月細長く光っている：</p>
+
+        <p>春夜長まだ続いている</p>
+      </div>
+    </section>
+    <section class="chapter" id="chapter-2">
+      <div class="chapter-header">
+        <span class="chapter-number">第2章</span>
+        <h2 class="chapter-title">夏祭りの準備</h2>
+      </div>
+      
+        <div class="chapter-image">
+          <img src="images/chapter_02.png" alt="第2章 挿絵"
+               loading="lazy" />
+        </div>
+      <div class="chapter-body">
+        <p># 第2章　夏祭りの準備</p>
+
+        <p>蝉の声が商店街を埋め尽くしていた。朝から続くその合唱は、アスファルトに降り注ぐ太陽の熱と一体となり、空気を粘り気のあるものに変えていた。店先に吊るした風鈴が、かすかに音を立てる。その音は蝉時雨に掻き消されそうになりながらも、確かにそこにある。みおは店の入り口に打ち水をしていた。柄杓から流れ出る水が地面に触れる瞬間、白い湯気が立ち上る。土の匂い。ほんの少しだけ、ひんやりとした空気が足元を這う。</p>
+
+        <p>「おーい、みおちゃん」</p>
+
+        <p>声の方向を見上げると、田中おじいちゃんが麦わら帽子をかぶって近づいてくる。手には大きな風船の束。赤や青や黄色のゴムが、陽の光を反射してゆらめいている。</p>
+
+        <p>「これ、祭りの飾り用だよ。うちの倉庫から出てきたんだけど、まだ使えそうだろ？」</p>
+
+        <p>みおは柄杓を置き、手を拭いながら近づいた。風船は少しほこりっぽかったが、色褪せてはいない。一つ手に取ると、ゴムの感触が指に伝わる。</p>
+
+        <p>「きれいですね」</p>
+
+        <p>「昔はね、商店街の子供たち全員に配ってたんだよ」</p>
+
+        <p>おじいちゃんは懐かしそうに目を細めた。</p>
+
+        <p>「今でも子供はいるけどね。少なくなっちゃったけど」</p>
+
+        <p>商店街の奥から太鼓の音が聞こえてきた。練習が始まっているのだろう。そのリズムはゆっくりで、時折間違える音も混じる。それでも確実に夏祭りに向かって進んでいる証だった。</p>
+
+        <p>午後になると、各店舗から人が集まり始めた。「陽だまり」の前には長机が並べられ、そこを拠点に準備が進められることになっていた。八百屋の奥さんはスイカを抱えて現れた。鮮やかな緑色の皮に黒い縞模様。冷やしているのか表面には水滴がついている。</p>
+
+        <p>「差し入れよー！ みんなで食べてね」</p>
+
+        <p>魚屋のおじさんは大きな保冷箱を運んできた。「うちのは後でな。刺身用の氷を持ってきただけだ」。花屋の若い夫婦は色とりどりの造花を持参した。「山車用です」と説明しながら机の上に広げていく。</p>
+
+        <p>みおは店内から麦茶とコップを取り出した。氷を入れたガラスの水差しには水滴がつき、机の上で小さな水たまりを作った。</p>
+
+        <p>「暑いから水分補給を」</p>
+
+        <p>そう言ってコップを並べると、人々は自然と集まってきた。</p>
+
+        <p>田中おじいちゃんが手帳を取り出す。「さてとね、今年の役割分担だけど…」。ページをめくる音。紙の匂いがほのかに漂う。</p>
+
+        <p>祭りまであと一週間。</p>
+        <p>商店街全体で行う夏祭りは年に一度の大イベントだ。</p>
+        <p>露店が出る。</p>
+        <p>踊りの輪ができる。</p>
+        <p>夜には花火も上がる。</p>
+
+        <p>みおには「くじ引き屋台」担当が割り当てられた。</p>
+        <p>「去年までやってた加藤さんが腰を痛めちゃってね」</p>
+        <p>おじいちゃんが申し訳なさそうに言う。</p>
+        <p>「大丈夫ですよ」</p>
+        <p>みおは即答した。</p>
+        <p>「教えてもらいながらやってみます」</p>
+
+        <p>次の日から準備は本格化した。</p>
+        <p>みおは午前中だけ店を開け、午後は祭りの準備にあてた。</p>
+        <p>倉庫から出てきたくじ引き台は木製で重かった。</p>
+        <p>埃を払い拭き上げると、</p>
+        <p>桜色の塗装があちこち剥げているのが見えた。</p>
+
+        <p>「これはね、二十年以上前から使ってるんだよ」</p>
+        <p>突然背後から声がした。</p>
+        <p>振り返ると豆腐屋のおばあさんが立っていた。</p>
+        <p>白いエプロンについた大豆の粉のようなものが、</p>
+        <p>光の中で微かに輝いている。</p>
+
+        <p>「私も若い頃ずっとこれを担当してたわ」</p>
+        <p>おばあさんは懐かしそうにくじ引き台を撫でた。</p>
+        <p>木目の感触を確かめるように、</p>
+        <p>ゆっくりと手を滑らせる。</p>
+
+        <p>「ここに傷があるでしょう？」</p>
+        <p>指さす先には小さなへこみがあった。</p>
+        <p>「うちの孫が小さい頃、</p>
+        <p>駄菓子をもっと欲しくて頭ぶつけた跡よ」</p>
+        <p>笑い声が出る。</p>
+        <p>乾いた、</p>
+        <p>温かい笑い声だった。</p>
+
+        <p>午後三時過ぎ、</p>
+        <p>日陰ですら蒸し暑さが続く時間帯。</p>
+        <p>みおはくじ引きの中身を作っていた。</p>
+        <p>小さな紙片に番号を書き、</p>
+        <p>それを丸めて箱に入れていく作業。</p>
+        <p>指先にインクの匂いが染みつく。</p>
+
+        <p>外から子供たちのはしゃぎ声が聞こえる。</p>
+        <p>夏休みに入った彼らも準備を手伝っているのだろう。</p>
+        <p>水鉄砲を持って走り回る足音。</p>
+        <p>注意する大人の声。</p>
+        <p>それに対する子供たちのはにかんだ笑い声。</p>
+
+        <p>ふと顔を上げると、</p>
+        <p>店先を通り過ぎる親子連れが見えた。</p>
+        <p>母親が子供の手を引いている。</p>
+        <p>その子供――</p>
+        <p>先日ズボンを縫ってあげた男の子だった。</p>
+
+        <p>男の子もみおに気づいたようだ。</p>
+        <p>ぱっと顔を輝かせて手を振る。</p>
+        <p>母親も会釈をする。</p>
+        <p>何も言わないけれど、</p>
+        <p>その視線だけで十分だった。</p>
+
+        <p>夕方、</p>
+        <p>田中おじいちゃんが様子を見に来たとき、</p>
+        <p>くじ引きの中身作りはほぼ終わっていた。</p>
+
+        <p>「随分進んだねえ」</p>
+        <p>机の上に並んだ小さな紙丸めを見て感心した口調。</p>
+
+        <p>「賞品の方も決めないといけないんですよね」</p>
+        <p>みおが見上げると、</p>
+        <p>おじいちゃんはうんうんとうなずいた。</p>
+
+        <p>「そうだなあ…</p>
+        <p>駄菓子セットとか文房具とか…</p>
+        <p>定番だけど喜ばれるよ」</p>
+
+        <p>話しているうちに他の店主たちも集まってきた。</p>
+        <p>それぞれ意見を持ち寄る。</p>
+
+        <p>「うちのでんでん太鼓提供するよ」</p>
+        <p>玩具屋のおじさんが言う。</p>
+
+        <p>「うちならシャボン玉セットがあるわ」</p>
+        <p>雑貨店のおばあさんも加わる。</p>
+
+        <p>話し合いは自然と拡大していった。</p>
+        <p>誰かの発言を受けてもう一人が付け加える。</p>
+        <p>また別の誰かが具体案を示す。</p>
+
+        <p>みおはただ聞いているだけで良かった。</p>
+        <p>意見を取りまとめる必要などなかったのだ。</p>
+        <p>この人たちの中では、</p>
+        <p>物事がいつの間にか形になっていくのだと気づいた。</p>
+
+        <p>最終的に賞品リストには十種類以上の品目が並んだ。</p>
+        <p>どれも高価なものではないけれど、</p>
+        <p>一つ一つにかける思いが見えるリストだった。</p>
+
+        <p>問題発生したのは山車の方だった。</p>
+
+        <p>毎年使っている山車本体にひび割れが見つかったのだ。</p>
+        <p>飾り付け担当の人々があわてふためく中、</p>
+        <p>田中おじいちゃんだけ落ち着いている。</p>
+
+        <p>「大工さんのところに行こう」</p>
+        <p>そう言って商店街のはずれへ歩き出すのみおをお連れていったのは、</p>
+
+        <p>古びた看板のかかった工務店だった。</p>
+
+        <p>中に入ると木材の香りにつつまれた。</p>
+        <p>削りカスのようなものが床一面に散らばっている中で、</p>
+        <p>年配男性二人組があごひげをつけた老人を取り囲んでいた</p>
+
+        <p>老人――大工棟梁と呼ばれる人は</p>
+        <p>ひび割れた部分を見つめていた</p>
+
+        <p>長い沈黙</p>
+        <p>指で木材叩く音だけ響く</p>
+
+        <p>「直せるか？」</p>
+        <p>田中おじいちゃん問う</p>
+
+        <p>棟梁ゆっくりとうなずく</p>
+        <p>しかし条件があると言う</p>
+
+        <p>人手が必要だと</p>
+
+        <p>翌朝早く</p>
+        <p>商店街男衆総出での修復作業始まった</p>
+
+        <p>普段魚捌いている手で木材支える</p>
+        <p>八百屋店主ハンマー握る</p>
+        <p>豆腐屋若主人ノコギリ引く</p>
+
+        <p>汗臭さ混ざる木屑舞う空気の中で</p>
+        <p>世代超えた共同作業進んでいく</p>
+
+        <p>正午近くなると女性陣差し入れ届ける</p>
+        <p>冷やしキュウリ塩ふったもの</p>
+        <p>トマト丸ごと氷水漬けたもの</p>
+        <p>麦茶大きなやかん入れて</p>
+
+        <p>ひと休み時間では年寄り昔話始める</p>
+        <p>この山車作った時のこと</p>
+        <p>戦後まだ何もない時代のこと</p>
+
+        <p>若者たち黙って聞いている</p>
+        <p>口動かすのは食べ物運ぶ時だけ</p>
+
+        <p>午後作業再開するとペース上がった</p>
+        <p>無言連携生まれていたのだ</p>
+
+        <p>夕方六時過ぎ</p>
+        <p>最後金槌打つ音響いて完了宣言出された</p>
+
+        <p>修復された山車前に皆集まる</p>
+        <p>満足そうな顔並ぶ中で棟梁一言発する</p>
+
+        <p>「これでまた十年持つ」</p>
+
+        <p>拍手起こるわけではないけれど</p>
+        <p>互いに頷き合う姿があった</p>
+
+        <p>祭り前日のみお一日慌ただしかった</p>
+
+        <p>最終確認追われているとき店ベル鳴った</p>
+
+        <p>振り返れば見知らぬ女性立っていた</p>
+        <p>年齢三十代半ばくらいだろうか</p>
+        <p>白ブラウス紺スカートという清楚な服装だが表情どこか疲れて見える</p>
+
+        <p>何をお探しですか？尋ねると女性少し躊躇して答えた</p>
+
+        <p>実家近くなので…懐かしくて…</p>
+
+        <p>どうやらこの商店街育ったらしい昔よく遊び来ていたとのことだがもう十年以上帰っていないと言う</p>
+
+        <p>会話続けるうち女性表情和らいできた特に夏祭りの話題出たとき目輝いた思い出話次々溢れてくる駄菓子屋のおばあさんにもらった金平糖のこと浴衣すそ汚して怒られたこと友達とはぐれて泣いたことすべてここでの記憶だった</p>
+
+        <p>最後女性こう言った明日祭り来ます必ずそして小さな袋取り出す中身見せないまま置いて行った開けてみれば手作りストラップ数個入っていた皮製で一つ一つ模様違う明日来られなかった人の分も楽しんでくださいというメモ添えてあった</p>
+
+        <p>当日朝空気違っていたいつもより早起き鳥たち騒ぐように鳴いている通りを行き交う人足音慌ただしさを含んでいる六時商店街組合員全員集合場所決まっている神社境内石段冷たい朝露濡れているそこで神主簡素神事行われる無事祈願される一同頭下げる時蝉一斉鳴き止むような気した本当止んだわけではないけれど一瞬静寂訪れたその後太鼓叩き始める合図だ各担当場所散っていくみお自分の屋台へ向かった設置作業終わり一段落ついた頃初客現れた親連れた幼児女児浴衣姿ピンク地金魚模様可愛らしいまず母親説明聞く仕組み理解すると子供手取ってくじ引かせる結果三等当たり玩具屋のでんでん太鼓渡す女児嬉しそう振り回す音周囲響くそれが合図のように客増え始めた昼過ぎには行列できるほどになった対応するうち顔見知りの常連客多くいることに気づいたいつも買物来るあのおばあちゃん野菜売りのあのお兄さん皆笑顔で挨拶交わしていく夕方近くなると踊りの音楽流れてきた盆踊り始まる合図だ屋台一時閉めて参加しようと思ったとき田中おじいちゃん現れた交代要員連れてきたという花屋夫婦だ二人とも浴衣姿普段と違う華やかな印象与えるここ任せて行っていいよと言われ感謝伝え歩き出す会場中央広場既に輪できていた提灯灯揺れる中老若男女混ざって同じステップ踏む不揃いはずそれが不思議調和している見ているだけで温かい気持ち湧いてくる輪加わろうとしたとき誰かに肩叩かれた振り返れば昨日来た女性立っていた今日浴衣着ている柄紫藤模様とても似合っている一緒踊ろう誘われ手繋ぐ二人輪に入っていくと周囲自然受け入れてくれる知らない人同士でも手取り足取り教えてくれるそんな空間だった踊り終わり汗拭っていると女性そっと耳打ちしたありがとう帰ってこられて良かったそれだけ言って人混み消えていった夜花火上がる時間近づいてきた屋台片付け終わり皆河原へ移動する道すがら会話弾む今日成功談明日疲労予想そんな言葉飛び交う中でふと空見上げれば星既に出始めていた暗くなる空青色深まりゆく河原到着すると既に多くの人集まっている川面涼しい風運んでくる草むらの虫たち合唱再開している堤防斜面腰下ろして待つ間にも周囲笑顔絶えない最初一発上がったとき金色光滝のように流れ落ちるそれを見上げる数百人の顔一瞬同じ表情浮かべた次の瞬間歓声起こる二発目三発目打ち上がる度ため息漏れる拍手起こる最後連発打ち上がるところでは子供たち跳び跳ねている終わった後の静寂耳慣れるまで少し時間必要だった立ち上がり始める人々の中でもう一度空見上げれば星以前より鮮明に見える月も昇っていた帰路商店街戻ると片付け残された仕事あるはずだが誰急ぐ様子ない提灯灯消しながら談笑続ける結局全片付け終わった深夜零時過ぎていた解散しようとしたとき田中おじいちゃん皆呼び止めた差し入れあると言って取り出したのはスイカ二玉冷え切っている包丁入れる音爽やかに響き赤身現れる皆黙って食べ始める甘さ喉通っていく疲労少し溶けていく食べ終わってもまだ誰帰ろうとしないただ立っている月明かり下それぞれ影長く伸びている</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>陽だまり商店街物語</p>
+    <p>Generated with Claude + DeepSeek + Stable Diffusion</p>
+  </footer>
+
+  <button class="mode-toggle" onclick="toggleMode()">🌗 表示切替</button>
+
+  <script>
+    /* ─── 表示切替 (ダーク/ライト) ─── */
+    function toggleMode() {
+      document.body.classList.toggle('light');
+      try {
+        localStorage.setItem('mode', document.body.classList.contains('light') ? 'light' : 'dark');
+      } catch(e) {}
+    }
+    try {
+      if (localStorage.getItem('mode') === 'light') document.body.classList.add('light');
+    } catch(e) {}
+
+    /* ─── 目次ジャンプ (確実にスクロール) ─── */
+    function smoothJump(e, id) {
+      e.preventDefault();
+      var el = document.getElementById(id);
+      if (!el) return;
+      var navH = document.querySelector('.nav-bar');
+      var offset = navH ? navH.offsetHeight + 10 : 50;
+      var top = el.getBoundingClientRect().top + window.pageYOffset - offset;
+      window.scrollTo({ top: top, behavior: 'smooth' });
+      history.replaceState(null, '', '#' + id);
+    }
+
+    /* ─── スクロールプログレスバー ─── */
+    window.addEventListener('scroll', function() {
+      var h = document.documentElement;
+      var pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+      document.getElementById('progress').style.width = pct + '%';
+    });
+
+    /* ─── ナビバー: 現在の章ハイライト ─── */
+    (function() {
+      var chapters = document.querySelectorAll('.chapter');
+      var navLinks = document.querySelectorAll('.nav-bar a');
+      if (!chapters.length || !navLinks.length) return;
+      window.addEventListener('scroll', function() {
+        var scrollPos = window.scrollY + 150;
+        var current = 0;
+        chapters.forEach(function(ch, i) {
+          if (ch.offsetTop <= scrollPos) current = i;
+        });
+        navLinks.forEach(function(a, i) {
+          a.style.color = (i === current) ? 'var(--accent)' : '';
+          a.style.fontWeight = (i === current) ? '700' : '';
+        });
+      });
+    })();
+
+    /* ─── カルーセル ─── */
+    (function() {
+      var track = document.getElementById('carouselTrack');
+      if (!track) return;
+      var dots = track.parentElement.querySelectorAll('.carousel-dot');
+      var slides = track.querySelectorAll('.carousel-slide');
+      if (slides.length < 1) return;
+      function updateDots() {
+        var sw = slides[0].offsetWidth + 14;
+        var idx = Math.round(track.scrollLeft / sw);
+        dots.forEach(function(d, i) { d.classList.toggle('active', i === idx); });
+      }
+      track.addEventListener('scroll', updateDots, { passive: true });
+      dots.forEach(function(d) {
+        d.addEventListener('click', function() {
+          var sw = slides[0].offsetWidth + 14;
+          track.scrollTo({ left: parseInt(d.dataset.idx) * sw, behavior: 'smooth' });
+        });
+      });
+      var paused = false;
+      var timer = setInterval(function() {
+        if (paused) return;
+        var sw = slides[0].offsetWidth + 14;
+        var mx = track.scrollWidth - track.clientWidth;
+        var nx = track.scrollLeft + sw;
+        track.scrollTo({ left: nx > mx ? 0 : nx, behavior: 'smooth' });
+      }, 4000);
+      track.addEventListener('touchstart', function() { paused = true; clearInterval(timer); }, { passive: true });
+    })();
+  </script>
+</body>
+</html>
